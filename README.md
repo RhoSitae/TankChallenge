@@ -6,3 +6,5 @@
 ---
 
 프로젝트에 대한 자세한 설명이나 진행 상황은 추후 업데이트 예정입니다.
+
+https://www.youtube.com/@sitaerho1407
