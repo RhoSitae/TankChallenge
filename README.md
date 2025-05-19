@@ -16,7 +16,7 @@
 ---
 
 ## Others
-> https://github.com/APPLE-stalk
+- [Lee Kyoung Do](https://github.com/APPLE-stalk)
 
 ## License
 
