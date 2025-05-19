@@ -11,4 +11,14 @@
 > https://www.youtube.com/@sitaerho1407
 
 # License
-> All code in the TankChallenge repository, including YOLOv8 integration, is released under the Apache License 2.0 with Commons Clause.
+> All code in the TankChallenge repository is released under the Apache License 2.0 with Commons Clause.
+> 
+> @software{yolov8_ultralytics,
+  author = {Glenn Jocher and Ayush Chaurasia and Jing Qiu},
+  title = {Ultralytics YOLOv8},
+  version = {8.0.0},
+  year = {2023},
+  url = {https://github.com/ultralytics/ultralytics},
+  orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
+  license = {AGPL-3.0}
+  }
