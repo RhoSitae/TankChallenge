@@ -15,16 +15,15 @@
 
 ---
 
+## Others
+> https://github.com/APPLE-stalk
+
 ## License
 
 All code in the TankChallenge repository is released under the **Apache License 2.0 with Commons Clause**.
 
 The YOLOv8 software used in this project is licensed under **AGPL-3.0**.  
 자세한 내용은 [Ultralytics YOLOv8 GitHub repository](https://github.com/ultralytics/ultralytics)를 참고하세요.
-
----
-
-### Citation for YOLOv8
 
 ```bibtex
 @software{yolov8_ultralytics,
