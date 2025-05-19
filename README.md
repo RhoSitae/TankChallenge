@@ -7,18 +7,32 @@
 
 프로젝트에 대한 자세한 설명이나 진행 상황은 추후 업데이트 예정입니다.
 
-# Test Videos
+---
+
+## Test Videos
+
 > https://www.youtube.com/@sitaerho1407
 
-# License
-> All code in the TankChallenge repository is released under the Apache License 2.0 with Commons Clause.
+---
 
-> @software{yolov8_ultralytics,
->           author = {Glenn Jocher and Ayush Chaurasia and Jing Qiu},
->           title = {Ultralytics YOLOv8},
->           version = {8.0.0},
->           year = {2023},
->           url = {https://github.com/ultralytics/ultralytics},
->           orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
->           license = {AGPL-3.0}
->           }
+## License
+
+All code in the TankChallenge repository is released under the **Apache License 2.0 with Commons Clause**.
+
+The YOLOv8 software used in this project is licensed under **AGPL-3.0**.  
+자세한 내용은 [Ultralytics YOLOv8 GitHub repository](https://github.com/ultralytics/ultralytics)를 참고하세요.
+
+---
+
+### Citation for YOLOv8
+
+```bibtex
+@software{yolov8_ultralytics,
+  author = {Glenn Jocher and Ayush Chaurasia and Jing Qiu},
+  title = {Ultralytics YOLOv8},
+  version = {8.0.0},
+  year = {2023},
+  url = {https://github.com/ultralytics/ultralytics},
+  orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
+  license = {AGPL-3.0}
+}
