@@ -17,7 +17,8 @@
 ## People
 - [Lee Kyoung Do](https://github.com/APPLE-stalk)
 - [LeeGeeH](https://github.com/LeeGeeH)
-
+- [Yun Duk Gyu](https://github.com/thug-u)
+  
 ## License
 
 All code in the TankChallenge repository is released under the **Apache License 2.0 with Commons Clause**.
