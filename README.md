@@ -18,6 +18,7 @@
 - [Lee Kyoung Do](https://github.com/APPLE-stalk)
 - [LeeGeeH](https://github.com/LeeGeeH)
 - [Yun Duk Gyu](https://github.com/thug-u)
+- [SHIN HONG CHUL](https://github.com/sleepingkim)
   
 ## License
 
