@@ -1,4 +1,5 @@
 # TankChallenge
+![image](https://github.com/user-attachments/assets/b082b8c0-0609-46ed-943a-054eda3be03d)
 
 > ⚠️ 현재 프로젝트는 **테스트 중**입니다.  
 > 기능이 완전히 구현되지 않았고, 안정화 작업이 진행 중입니다.
