@@ -3,7 +3,7 @@ import rclpy
 import struct
 import math
 from rclpy.node import Node
-from rclpy.qos import QoSProfile
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 from std_msgs.msg import Header, ColorRGBA
 from geometry_msgs.msg import Pose, Quaternion, Vector3, TransformStamped
 from visualization_msgs.msg import Marker
@@ -15,7 +15,11 @@ from tf_transformations import quaternion_from_euler, quaternion_multiply
 class RvizPub(Node):
     def __init__(self):
         super().__init__("rviz_publisher")
-        qos = QoSProfile(depth=10)
+        qos = QoSProfile(
+            depth=10,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
 
         # Publishers
         self.pub_tank   = self.create_publisher(Marker,      "/tank_marker",   qos)

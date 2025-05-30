@@ -5,3 +5,4 @@ geometry_msgs/Vector3 body_euler     # bodyX,Z,Y  (roll,pitch,yaw 순서 보존)
 geometry_msgs/Vector3 turret_euler   # turretX,Z,Y
 float64              speed           # playerSpeed
 float32              health          # playerHealth
+float32				 distance

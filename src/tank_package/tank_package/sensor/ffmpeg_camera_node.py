@@ -5,15 +5,21 @@ import rclpy
 from rclpy.node import Node
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
-RTMP_URL = "rtmp://192.168.0.3/live/stream_key"
+RTMP_URL = "rtmp://192.168.0.118/live/stream_key"
 WIDTH, HEIGHT, FPS = 1920, 1080, 60
 
 class FfmpegCameraNode(Node):
     def __init__(self):
         super().__init__('ffmpeg_camera')
         self.bridge = CvBridge()
-        self.img_pub = self.create_publisher(Image, '/camera/image_raw', 10)
+        qos = QoSProfile(
+            depth=10,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
+        self.img_pub = self.create_publisher(Image, '/camera/image_raw', qos)
         self.frame_q = queue.Queue(maxsize=10)  # 큐 크기 확장
 
         # FFmpeg 실행

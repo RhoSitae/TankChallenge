@@ -7,9 +7,9 @@ import rclpy
 from rclpy.node import Node
 from rclpy.callback_groups import ReentrantCallbackGroup
 from rclpy.executors import MultiThreadedExecutor
-
+import time
 from tank_package.common.logger import get_logger
-from tank_package.common.qos import DEFAULT_QOS
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 from tank_package.common.coord_utils import unity_point_to_ros, unity_to_ros_euler
 from tank_package_msg.msg import TankState, EnemyState, LidarScan, LidarPoint
 
@@ -21,20 +21,24 @@ class SensorBridge(Node):
         self.log = get_logger(self)
 
         # ─ Parameters ──────────────────────────────────────────────
-        self.declare_parameter("server_ip", "192.168.0.2")
-        self.declare_parameter("poll_hz",   10)
+        self.declare_parameter("server_ip", "192.168.0.200")
+        self.declare_parameter("poll_hz",   25)
         self.declare_parameter("timeout",   _JSON_TIMEOUT)
 
         ip = self.get_parameter("server_ip").value
-        self.url_info = f"http://{ip}:5050/get_info"
+        self.url_info = f"http://{ip}:5000/get_info"
 
-        # ─ Publishers ──────────────────────────────────────────────
-        qos = DEFAULT_QOS
+        # ─ Publishers ─────────────────────────────────────────────
+        qos = QoSProfile(
+            depth=10,
+            reliability=QoSReliabilityPolicy.RELIABLE,
+            history=QoSHistoryPolicy.KEEP_LAST,
+        )
         self.pub_tank  = self.create_publisher(TankState,  "/tank_state",  qos)
         self.pub_enemy = self.create_publisher(EnemyState, "/enemy_state", qos)
         self.pub_scan  = self.create_publisher(LidarScan,  "/lidar_scan",  qos)
 
-        # ─ Timer for JSON poll ─────────────────────────────────────
+        # ─ Timer for JSON poll ────────────────────────────────────
         hz = self.get_parameter("poll_hz").value
         self.create_timer(1.0/hz, self.poll_info, ReentrantCallbackGroup())
         self.log.info(f"Bridge Node up → polling {self.url_info}")
@@ -59,64 +63,69 @@ class SensorBridge(Node):
     def _publish_state(self, d: dict) -> None:
         now = self.get_clock().now().to_msg()
 
-        # TankState
+        # TankState 발행
         ts = TankState()
         ts.stamp    = now
         ts.position = unity_point_to_ros(d.get("playerPos", {}))
+        # JSON에서 playerSpeed 항목을 읽어 speed 필드에 할당
+        ts.speed    = float(d.get("playerSpeed", 0.0))
 
-        # body_euler: Unity(Z, Y, X) -> ROS(roll, pitch, yaw)
-        ts.body_euler.x, ts.body_euler.y, ts.body_euler.z = unity_to_ros_euler(
-            d.get("playerBodyZ", 0.0),
+        # body_euler: Unity(Z,Y,X) -> ROS(roll,pitch,yaw)
+        bx, by, bz = (
+            d.get("playerBodyX", 0.0),
             d.get("playerBodyY", 0.0),
-            d.get("playerBodyX", 0.0)
+            d.get("playerBodyZ", 0.0)
         )
+        ts.body_euler.x, ts.body_euler.y, ts.body_euler.z = unity_to_ros_euler(bz, by, bx)
 
-        # turret_euler: Unity(Z, Y, X) -> ROS(roll, pitch, yaw)
-        tr, tp, ty = unity_to_ros_euler(
-            d.get("playerTurretZ", 0.0),
+        # turret_euler: Unity(Z,Y,X) -> ROS(roll,pitch,yaw)
+        tx, ty, tz = (
+            d.get("playerTurretX", 0.0),
             d.get("playerTurretY", 0.0),
-            d.get("playerTurretX", 0.0)
+            d.get("playerTurretZ", 0.0)
         )
+        tr, tp, tyaw = unity_to_ros_euler(tz, ty, tx)
         ts.turret_euler.x = tr
         ts.turret_euler.y = -tp
-        ts.turret_euler.z = ty
+        ts.turret_euler.z = tyaw
 
-        ts.speed  = d.get("playerSpeed", 0.0)
-        ts.health = d.get("playerHealth", 100.0)
+        ts.health = float(d.get("playerHealth", 100.0))
+        ts.distance = float(d.get("distance", 0.0))
         self.pub_tank.publish(ts)
 
-        # EnemyState
+        # EnemyState 발행
         es = EnemyState()
         es.stamp    = now
         es.position = unity_point_to_ros(d.get("enemyPos", {}))
-
-        es.body_euler.x, es.body_euler.y, es.body_euler.z = unity_to_ros_euler(
-            d.get("enemyBodyZ", 0.0),
+        ex, ey, ez = (
+            d.get("enemyBodyX", 0.0),
             d.get("enemyBodyY", 0.0),
-            d.get("enemyBodyX", 0.0)
+            d.get("enemyBodyZ", 0.0)
         )
+        es.body_euler.x, es.body_euler.y, es.body_euler.z = unity_to_ros_euler(ez, ey, ex)
 
-        er, ep, ey = unity_to_ros_euler(
-            d.get("enemyTurretZ", 0.0),
+        etx, ety, etz = (
+            d.get("enemyTurretX", 0.0),
             d.get("enemyTurretY", 0.0),
-            d.get("enemyTurretX", 0.0)
+            d.get("enemyTurretZ", 0.0)
         )
+        er, ep, eyaw = unity_to_ros_euler(etz, ety, etx)
         es.turret_euler.x = er
         es.turret_euler.y = -ep
-        es.turret_euler.z = ey
+        es.turret_euler.z = eyaw
 
-        es.speed  = d.get("enemySpeed", 0.0)
-        es.health = d.get("enemyHealth", 100.0)
+        es.speed  = float(d.get("enemySpeed", 0.0))
+        es.health = float(d.get("enemyHealth", 100.0))
         self.pub_enemy.publish(es)
 
-        # LidarScan
+        # LidarScan 발행
         scan = LidarScan()
         scan.stamp  = now
         scan.origin = unity_point_to_ros(d.get("lidarOrigin", {}))
         for p in d.get("lidarPoints", []):
             lp = LidarPoint()
-            lp.angle    = p.get("angle", 0.0)
-            lp.distance = p.get("distance", 0.0)
+            lp.angle    = float(p.get("angle", 0.0))
+            lp.distance = float(p.get("distance", 0.0))
             lp.position = unity_point_to_ros(p.get("position", {}))
             scan.points.append(lp)
         self.pub_scan.publish(scan)
@@ -124,7 +133,8 @@ class SensorBridge(Node):
 
 def main():
     rclpy.init()
-    executor = MultiThreadedExecutor()
+    executor = MultiThreadedExecutor() 
+
     node = SensorBridge()
     executor.add_node(node)
     try:

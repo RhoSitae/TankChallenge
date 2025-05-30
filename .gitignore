@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# macOS or Windows trash files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# dotenv
+.env
+
+build/
+install/
+log/
+11/
+*.zip

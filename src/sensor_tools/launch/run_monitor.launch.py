@@ -7,12 +7,12 @@ def generate_launch_description():
         # 기존 SensorBridge 노드 수정된 executable 이름 사용
         Node(
             package='tank_package',
-            executable='sensor_bridge_node',
-            name='sensor_bridge',
+            executable='bridge_node',
+            name='bridge_node',
             output='screen',
             parameters=[{
-                'server_ip': '192.168.0.22',
-                'poll_hz':   0.3,
+                #server_ip': '192.168.0.2',
+                #'poll_hz':   0.3,
                 'timeout':   2.0,
             }],
         ),

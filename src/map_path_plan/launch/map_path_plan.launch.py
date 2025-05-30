@@ -11,6 +11,11 @@ def generate_launch_description():
 
     return LaunchDescription([
         
+        Node(package='tank_package',
+             executable='bridge_node',
+             name='bridge_node',
+             output='screen'),
+
         Node(
             package='map_path_plan',
             executable='ply_loader',
